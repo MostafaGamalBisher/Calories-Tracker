@@ -6,25 +6,25 @@ function App() {
       date: new Date(2023, 2, 1),
       meal: 'breakfast',
       content: 'eggs',
-      calories: '340',
+      calories: 340,
     },
     {
       date: new Date(2023, 2, 2),
       meal: 'launch',
       content: 'cosa',
-      calories: '20',
+      calories: 20,
     },
     {
       date: new Date(2023, 2, 3),
       meal: 'dinner',
       content: 'water',
-      calories: '2000',
+      calories: 2000,
     },
     {
       date: new Date(2023, 2, 4),
       meal: 'snacks',
       content: 'shai koshary',
-      calories: '34',
+      calories: 34,
     },
   ];
 
