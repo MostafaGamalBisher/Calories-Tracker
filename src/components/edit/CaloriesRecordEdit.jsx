@@ -2,42 +2,36 @@ import { useState } from 'react';
 import './CaloriesRecordEdit.css';
 
 function CaloriesRecordEdit() {
-  const [maxCalories, setMaxCalories] = useState(0);
-  const [dateValue, setDateValue] = useState();
-  const [mealValue, setMealValue] = useState();
-  const [contentValue, setContentValue] = useState();
-  const [caloriesValue, setCaloriesValue] = useState();
+  // const [maxCalories, setMaxCalories] = useState(0);
+  // const [dateValue, setDateValue] = useState();
+  // const [mealValue, setMealValue] = useState();
+  // const [contentValue, setContentValue] = useState();
+  // const [caloriesValue, setCaloriesValue] = useState();
+
+  const [mealRecord, setMealRecord] = useState({});
 
   const onDateChangeHandler = (e) => {
-    setDateValue(e.target.value);
+    setMealRecord({ ...mealRecord, date: e.target.value });
   };
   const onMealChangeHandler = (e) => {
-    setMealValue(e.target.value);
+    setMealRecord({ ...mealRecord, meal: e.target.value });
   };
   const onContentChangeHandler = (e) => {
-    setContentValue(e.target.value);
+    setMealRecord({ ...mealRecord, content: e.target.value });
   };
   const onCaloriesChangeHandler = (e) => {
-    setCaloriesValue(e.target.value);
-    if (maxCalories < e.target.value) {
-      setMaxCalories(e.target.value);
-    }
+    setMealRecord({ ...mealRecord, calories: e.target.value });
   };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     console.log({
-      date: dateValue,
-      meal: mealValue,
-      content: contentValue,
-      calo: caloriesValue,
-      maxCalo: maxCalories,
+      mealRecord,
     });
   };
 
   return (
     <form onSubmit={onSubmitHandler}>
-      <label>MaxCalories: {maxCalories}</label>
       <label htmlFor="date">Date:</label>
       <input type="date" name="date" id="date" onChange={onDateChangeHandler} />
       <label>Meal:</label>
