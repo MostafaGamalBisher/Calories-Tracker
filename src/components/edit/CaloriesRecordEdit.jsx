@@ -26,6 +26,16 @@ function CaloriesRecordEdit(props) {
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
+    if (
+      !mealRecord.date ||
+      !mealRecord.content ||
+      !mealRecord.meal ||
+      !mealRecord.calories
+    ) {
+      alert('Please fill out all fields before submitting!');
+      return;
+    }
+
     const completeRecord = {
       ...mealRecord,
       id: Date.now(),
@@ -52,9 +62,14 @@ function CaloriesRecordEdit(props) {
         id="date"
         value={mealRecord.date || ''}
         onChange={onDateChangeHandler}
+        required
       />
       <label>Meal:</label>
-      <select value={mealRecord.meal || ''} onChange={onMealChangeHandler}>
+      <select
+        required
+        value={mealRecord.meal || ''}
+        onChange={onMealChangeHandler}
+      >
         <option value="Breakfast">Breakfast</option>
         <option value="Lunch">Lunch</option>
         <option value="Dinner">Dinner</option>
@@ -67,6 +82,7 @@ function CaloriesRecordEdit(props) {
         id="Content"
         value={mealRecord.content || ''}
         onChange={onContentChangeHandler}
+        required
       />
       <label htmlFor="Calories">Calories:</label>
       <input
@@ -76,9 +92,14 @@ function CaloriesRecordEdit(props) {
         value={mealRecord.calories || ''}
         onChange={onCaloriesChangeHandler}
         className={`${styles['calories-input']} ${mealRecord.calories < 0 ? styles.error : ''}`}
+        min="1"
+        required
       />
       <div className={styles.footer}>
-        <button>Add Record</button>
+        <button type="submit">Add Record</button>
+        <button type="button" onClick={props.onCancel}>
+          Cancel
+        </button>
       </div>
     </form>
   );

@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-
+import Modal from 'react-modal';
 import CaloriesRecordEdit from './components/edit/CaloriesRecordEdit';
 import ListingSection from './components/calorieRecordsSection/ListingSection';
+import styles from './App.module.css';
+
+Modal.setAppElement('#root');
 
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [records, setRecords] = useState(() => {
     const savedRecordsString = localStorage.getItem('myTrackerData');
 
@@ -26,13 +30,30 @@ function App() {
     setRecords((prevRecords) => {
       return [newRecordFromChild, ...prevRecords];
     });
+    setIsModalOpen(false);
   };
 
   return (
     <div className="App">
-      <h1>Welcome to React with Almdrasa!</h1>
-      <CaloriesRecordEdit onFormSubmit={formSubmitHandler} />
+      <h1 className={styles.title}>Calorirs Tracker</h1>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        className={styles['my-custom-modal']}
+        overlayClassName={styles['my-custom-overlay']}
+      >
+        <CaloriesRecordEdit
+          onFormSubmit={formSubmitHandler}
+          onCancel={() => setIsModalOpen(false)}
+        />
+      </Modal>
       <ListingSection allRecords={records} />
+      <button
+        className={styles['open-modal-button']}
+        onClick={() => setIsModalOpen(true)}
+      >
+        Add New Meal
+      </button>
     </div>
   );
 }

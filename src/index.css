@@ -9,6 +9,7 @@
   --theme-color-light: #d0bdf4;
   --theme-color-normal: #8458b3;
   --theme-color-dark: #494d5f;
+  --theme-border-radius-smooth: 10px;
 }
 
 body {

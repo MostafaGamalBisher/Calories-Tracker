@@ -39,6 +39,8 @@
 
 .footer {
   display: flex;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 .footer button {
@@ -50,6 +52,12 @@
   padding: 10px;
   cursor: pointer;
   flex-grow: 1;
+}
+
+.footer button[type='button'] {
+  background-color: transparent;
+  border: 1px solid var(--theme-color-normal);
+  color: var(--theme-color-normal);
 }
 
 @media (min-width: 786px) {
