@@ -1,0 +1,13 @@
+.list {
+  list-style: none;
+  padding: 0;
+  border: 1px solid var(--theme-color-light);
+  border-radius: 10px;
+}
+.listItem {
+  border-bottom: 1px solid var(--theme-color-normal);
+}
+
+.listItem:last-child {
+  border-bottom: none;
+}

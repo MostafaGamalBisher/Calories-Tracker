@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './CaloriesRecordEdit.css';
+import styles from './CaloriesRecordEdit.module.css';
 
 function CaloriesRecordEdit(props) {
   // const [maxCalories, setMaxCalories] = useState(0);
@@ -44,7 +44,7 @@ function CaloriesRecordEdit(props) {
   };
 
   return (
-    <form onSubmit={onSubmitHandler}>
+    <form className={styles.form} onSubmit={onSubmitHandler}>
       <label htmlFor="date">Date:</label>
       <input
         type="date"
@@ -75,17 +75,9 @@ function CaloriesRecordEdit(props) {
         id="Calories"
         value={mealRecord.calories || ''}
         onChange={onCaloriesChangeHandler}
-        style={
-          mealRecord.calories < 0
-            ? {
-                border: '1px solid red',
-                backgroundColor: 'white',
-                color: 'red',
-              }
-            : {}
-        }
+        className={`${styles['calories-input']} ${mealRecord.calories < 0 ? styles.error : ''}`}
       />
-      <div className="footer">
+      <div className={styles.footer}>
         <button>Add Record</button>
       </div>
     </form>

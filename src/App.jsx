@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import RecordList from './components/calorieRecordsSection/RecordList';
+
 import CaloriesRecordEdit from './components/edit/CaloriesRecordEdit';
+import ListingSection from './components/calorieRecordsSection/ListingSection';
 
 function App() {
   const [records, setRecords] = useState(() => {
@@ -31,7 +32,7 @@ function App() {
     <div className="App">
       <h1>Welcome to React with Almdrasa!</h1>
       <CaloriesRecordEdit onFormSubmit={formSubmitHandler} />
-      <RecordList records={records} />
+      <ListingSection allRecords={records} />
     </div>
   );
 }
