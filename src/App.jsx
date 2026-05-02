@@ -35,7 +35,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className={styles.title}>Calorirs Tracker</h1>
+      <h1 className={styles.title}>Calories Tracker</h1>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
