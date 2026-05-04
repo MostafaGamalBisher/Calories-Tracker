@@ -53,6 +53,12 @@ function CaloriesRecordEdit(props) {
     });
   };
 
+  const isFormValid =
+    mealRecord.date &&
+    mealRecord.meal &&
+    mealRecord.content &&
+    mealRecord.calories;
+
   return (
     <form className={styles.form} onSubmit={onSubmitHandler}>
       <label htmlFor="date">Date:</label>
@@ -92,11 +98,13 @@ function CaloriesRecordEdit(props) {
         value={mealRecord.calories || ''}
         onChange={onCaloriesChangeHandler}
         className={`${styles['calories-input']} ${mealRecord.calories < 0 ? styles.error : ''}`}
-        min="1"
+        min="0"
         required
       />
       <div className={styles.footer}>
-        <button type="submit">Add Record</button>
+        <button type="submit" disabled={!isFormValid}>
+          Add Record
+        </button>
         <button type="button" onClick={props.onCancel}>
           Cancel
         </button>

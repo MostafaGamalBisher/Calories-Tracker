@@ -60,6 +60,11 @@
   color: var(--theme-color-normal);
 }
 
+.footer button:disabled {
+  background-color: rgb(128, 128, 128, 0.5);
+  color: white;
+}
+
 @media (min-width: 786px) {
   .form {
     grid-template-rows: repeat(2, 1fr) minmax(40px, auto);
