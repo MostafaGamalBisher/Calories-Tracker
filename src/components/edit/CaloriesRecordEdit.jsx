@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './CaloriesRecordEdit.module.css';
 
 function CaloriesRecordEdit(props) {
-  // const [maxCalories, setMaxCalories] = useState(0);
-  // const [dateValue, setDateValue] = useState();
-  // const [mealValue, setMealValue] = useState();
-  // const [contentValue, setContentValue] = useState();
-  // const [caloriesValue, setCaloriesValue] = useState();
-
   const [mealRecord, setMealRecord] = useState({});
+
+  // useEffect(() => {
+  //   let seconds = 0;
+
+  //   // We start a timer that runs every 1000ms (1 second)
+  //   const formTimer = setInterval(() => {
+  //     seconds++;
+  //     console.log(`⏱️ Form open for: ${seconds} seconds`);
+  //   }, 1000);
+
+  //   return () => {
+  //     console.log('🛑 Modal closed! Destroying the timer.');
+  //     clearInterval(formTimer);
+  //   };
+  // }, []);
 
   const onDateChangeHandler = (e) => {
     setMealRecord((pervValue) => ({ ...pervValue, date: e.target.value }));

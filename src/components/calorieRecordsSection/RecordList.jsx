@@ -2,6 +2,10 @@ import CalorieRecord from './CalorieRecord';
 import styles from './RecordList.module.css';
 
 function RecordList(props) {
+  const totalCalories = props.records.reduce((agg, cur) => {
+    return agg + cur.calories;
+  }, 0);
+
   if (props.records.length === 0) {
     return (
       <div className={styles['empty-state']}>
@@ -11,18 +15,21 @@ function RecordList(props) {
   }
 
   return (
-    <ul className={styles.list}>
-      {props.records.map((record) => (
-        <li key={record.id} className={styles.listItem}>
-          <CalorieRecord
-            date={record.date}
-            meal={record.meal}
-            content={record.content}
-            calories={record.calories}
-          ></CalorieRecord>
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className={styles.list}>
+        {props.records.map((record) => (
+          <li key={record.id} className={styles.listItem}>
+            <CalorieRecord
+              date={record.date}
+              meal={record.meal}
+              content={record.content}
+              calories={record.calories}
+            ></CalorieRecord>
+          </li>
+        ))}
+      </ul>
+      <p>Total Calories: {totalCalories}</p>
+    </>
   );
 }
 
