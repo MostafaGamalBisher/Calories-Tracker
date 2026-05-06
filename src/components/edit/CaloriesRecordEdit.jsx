@@ -1,15 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import styles from './CaloriesRecordEdit.module.css';
 
-function CaloriesRecordEdit(props) {
-  const DEFAULT_STATE = {
-    date: '',
-    meal: 'Breakfast',
-    content: '',
-    calories: 0,
-  };
+const DEFAULT_STATE = {
+  date: '',
+  meal: 'Breakfast',
+  content: '',
+  calories: 0,
+};
 
-  const [mealRecord, setMealRecord] = useState(DEFAULT_STATE);
+function formReducer(state, action) {
+  // We look at the "type" of message sent
+  switch (action.type) {
+    case 'UPDATE_FIELD':
+      // Safely copy the old state, and update the specific field
+      return {
+        ...state,
+        [action.field]: action.value,
+      };
+
+    case 'RESET_FORM':
+      // Instantly wipe the form back to default!
+      return DEFAULT_STATE;
+
+    default:
+      return state;
+  }
+}
+
+function CaloriesRecordEdit(props) {
+  const [mealRecord, dispatch] = useReducer(
+    formReducer,
+    DEFAULT_STATE,
+    (initialState) => ({
+      ...initialState,
+      date: props.currentDate.toISOString().split('T')[0],
+    })
+  );
+
+  useEffect(() => {
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'date',
+      value: props.currentDate.toISOString().split('T')[0],
+    });
+  }, [props.currentDate]);
 
   // useEffect(() => {
   //   let seconds = 0;
@@ -26,17 +60,37 @@ function CaloriesRecordEdit(props) {
   //   };
   // }, []);
 
-  const onDateChangeHandler = (e) => {
-    setMealRecord((pervValue) => ({ ...pervValue, date: e.target.value }));
+  const onDateChangeHandler = (event) => {
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'date',
+      value: event.target.value,
+    });
+    props.setCurrentDate(new Date(event.target.value));
   };
-  const onMealChangeHandler = (e) => {
-    setMealRecord((pervValue) => ({ ...pervValue, meal: e.target.value }));
+
+  const onMealChangeHandler = (event) => {
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'meal',
+      value: event.target.value,
+    });
   };
-  const onContentChangeHandler = (e) => {
-    setMealRecord((pervValue) => ({ ...pervValue, content: e.target.value }));
+
+  const onContentChangeHandler = (event) => {
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'content',
+      value: event.target.value,
+    });
   };
-  const onCaloriesChangeHandler = (e) => {
-    setMealRecord((pervValue) => ({ ...pervValue, calories: e.target.value }));
+
+  const onCaloriesChangeHandler = (event) => {
+    dispatch({
+      type: 'UPDATE_FIELD',
+      field: 'calories',
+      value: event.target.value,
+    });
   };
 
   const onSubmitHandler = (e) => {
@@ -46,7 +100,7 @@ function CaloriesRecordEdit(props) {
       !mealRecord.date ||
       !mealRecord.content ||
       !mealRecord.meal ||
-      !mealRecord.calories
+      mealRecord.calories === ''
     ) {
       alert('Please fill out all fields before submitting!');
       return;
@@ -61,7 +115,7 @@ function CaloriesRecordEdit(props) {
 
     props.onFormSubmit(completeRecord);
 
-    setMealRecord(DEFAULT_STATE);
+    dispatch({ type: 'RESET_FORM' });
   };
 
   const isSports =

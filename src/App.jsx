@@ -7,6 +7,8 @@ import styles from './App.module.css';
 Modal.setAppElement('#root');
 
 function App() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [records, setRecords] = useState(() => {
     const savedRecordsString = localStorage.getItem('myTrackerData');
@@ -45,9 +47,15 @@ function App() {
         <CaloriesRecordEdit
           onFormSubmit={formSubmitHandler}
           onCancel={() => setIsModalOpen(false)}
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
         />
       </Modal>
-      <ListingSection allRecords={records} />
+      <ListingSection
+        allRecords={records}
+        currentDate={currentDate}
+        setCurrentDate={setCurrentDate}
+      />
       <button
         className={styles['open-modal-button']}
         onClick={() => setIsModalOpen(true)}

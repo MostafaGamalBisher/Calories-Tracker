@@ -1,10 +1,8 @@
 import RecordList from './RecordList';
 import styles from './ListingSection.module.css';
-import { useState } from 'react';
 
 function ListingSection(props) {
-  const { allRecords } = props;
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { allRecords, setCurrentDate, currentDate } = props;
 
   const dateChangeHandler = (e) => {
     setCurrentDate(new Date(e.target.value));
