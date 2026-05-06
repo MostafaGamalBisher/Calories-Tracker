@@ -1,6 +1,6 @@
 import RecordList from './RecordList';
 import styles from './ListingSection.module.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function ListingSection(props) {
   const { allRecords } = props;
