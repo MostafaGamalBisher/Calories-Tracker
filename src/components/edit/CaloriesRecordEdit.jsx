@@ -26,13 +26,8 @@ function formReducer(state, action) {
 }
 
 function CaloriesRecordEdit(props) {
-  const {
-    totalCalories,
-    currentDate,
-    setCurrentDate,
-    addMealRecord,
-    currentDateStr,
-  } = useContext(CaloriesContext);
+  const { totalCalories, setCurrentDate, addMealRecord, currentDateStr } =
+    useContext(CaloriesContext);
 
   const [mealRecord, dispatch] = useReducer(
     formReducer,

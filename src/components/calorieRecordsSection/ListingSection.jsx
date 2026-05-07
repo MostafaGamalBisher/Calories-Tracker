@@ -4,8 +4,7 @@ import { CaloriesContext } from '../../CaloriesContext';
 import { useContext } from 'react';
 
 function ListingSection() {
-  const { currentDate, setCurrentDate, currentDateStr } =
-    useContext(CaloriesContext);
+  const { setCurrentDate, currentDateStr } = useContext(CaloriesContext);
 
   const dateChangeHandler = (e) => {
     setCurrentDate(new Date(e.target.value));
