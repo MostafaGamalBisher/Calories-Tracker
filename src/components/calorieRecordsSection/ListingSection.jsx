@@ -2,18 +2,10 @@ import RecordList from './RecordList';
 import styles from './ListingSection.module.css';
 
 function ListingSection(props) {
-  const { allRecords, setCurrentDate, currentDate } = props;
+  const { records, setCurrentDate, currentDate, totalCalories } = props;
 
   const dateChangeHandler = (e) => {
     setCurrentDate(new Date(e.target.value));
-  };
-
-  const dateFilter = (record) => {
-    return (
-      record.date.getDate() === currentDate.getDate() &&
-      record.date.getMonth() === currentDate.getMonth() &&
-      record.date.getFullYear() === currentDate.getFullYear()
-    );
   };
 
   return (
@@ -28,7 +20,7 @@ function ListingSection(props) {
         value={currentDate.toISOString().split('T')[0]}
         onChange={dateChangeHandler}
       />
-      <RecordList records={allRecords.filter(dateFilter)} />
+      <RecordList records={records} totalCalories={totalCalories} />
     </>
   );
 }

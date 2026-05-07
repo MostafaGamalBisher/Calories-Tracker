@@ -35,6 +35,18 @@ function App() {
     setIsModalOpen(false);
   };
 
+  const dailyRecords = records.filter((record) => {
+    return (
+      record.date.getDate() === currentDate.getDate() &&
+      record.date.getMonth() === currentDate.getMonth() &&
+      record.date.getFullYear() === currentDate.getFullYear()
+    );
+  });
+
+  const totalCaloriesForDate = dailyRecords.reduce((agg, cur) => {
+    return agg + cur.calories;
+  }, 0);
+
   return (
     <div className="App">
       <h1 className={styles.title}>Calories Tracker</h1>
@@ -49,12 +61,14 @@ function App() {
           onCancel={() => setIsModalOpen(false)}
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
+          totalCalories={totalCaloriesForDate}
         />
       </Modal>
       <ListingSection
-        allRecords={records}
+        records={dailyRecords}
         currentDate={currentDate}
         setCurrentDate={setCurrentDate}
+        totalCalories={totalCaloriesForDate}
       />
       <button
         className={styles['open-modal-button']}
