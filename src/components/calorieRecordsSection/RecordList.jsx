@@ -1,8 +1,12 @@
+import { useContext } from 'react';
+import { CaloriesContext } from '../../CaloriesContext';
 import CalorieRecord from './CalorieRecord';
 import styles from './RecordList.module.css';
 
-function RecordList(props) {
-  if (props.records.length === 0) {
+function RecordList() {
+  const { dailyRecords, totalCalories } = useContext(CaloriesContext);
+
+  if (dailyRecords.length === 0) {
     return (
       <div className={styles['empty-state']}>
         No meals recorded for this date.
@@ -13,7 +17,7 @@ function RecordList(props) {
   return (
     <>
       <ul className={styles.list}>
-        {props.records.map((record) => (
+        {dailyRecords.map((record) => (
           <li key={record.id} className={styles.listItem}>
             <CalorieRecord
               date={record.date}
@@ -24,7 +28,7 @@ function RecordList(props) {
           </li>
         ))}
       </ul>
-      <p>Total Calories: {props.totalCalories}</p>
+      <p>Total Calories: {totalCalories}</p>
     </>
   );
 }

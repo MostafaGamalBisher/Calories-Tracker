@@ -1,4 +1,5 @@
-import { useEffect, useReducer } from 'react';
+import { CaloriesContext } from '../../CaloriesContext';
+import { useContext, useEffect, useReducer } from 'react';
 import styles from './CaloriesRecordEdit.module.css';
 
 const DEFAULT_STATE = {
@@ -9,17 +10,14 @@ const DEFAULT_STATE = {
 };
 
 function formReducer(state, action) {
-  // We look at the "type" of message sent
   switch (action.type) {
     case 'UPDATE_FIELD':
-      // Safely copy the old state, and update the specific field
       return {
         ...state,
         [action.field]: action.value,
       };
 
     case 'RESET_FORM':
-      // Instantly wipe the form back to default!
       return DEFAULT_STATE;
 
     default:
@@ -28,12 +26,21 @@ function formReducer(state, action) {
 }
 
 function CaloriesRecordEdit(props) {
+  const {
+    totalCalories,
+    currentDate,
+    setCurrentDate,
+    addMealRecord,
+    currentDateStr,
+  } = useContext(CaloriesContext);
+
   const [mealRecord, dispatch] = useReducer(
     formReducer,
     DEFAULT_STATE,
     (initialState) => ({
       ...initialState,
-      date: props.currentDate.toISOString().split('T')[0],
+      // date: currentDate.toISOString().split('T')[0],
+      date: currentDateStr,
     })
   );
 
@@ -41,24 +48,10 @@ function CaloriesRecordEdit(props) {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'date',
-      value: props.currentDate.toISOString().split('T')[0],
+      // value: currentDate.toISOString().split('T')[0],
+      value: currentDateStr,
     });
-  }, [props.currentDate]);
-
-  // useEffect(() => {
-  //   let seconds = 0;
-
-  //   // We start a timer that runs every 1000ms (1 second)
-  //   const formTimer = setInterval(() => {
-  //     seconds++;
-  //     console.log(`⏱️ Form open for: ${seconds} seconds`);
-  //   }, 1000);
-
-  //   return () => {
-  //     console.log('🛑 Modal closed! Destroying the timer.');
-  //     clearInterval(formTimer);
-  //   };
-  // }, []);
+  }, [currentDateStr]);
 
   const onDateChangeHandler = (event) => {
     dispatch({
@@ -66,7 +59,7 @@ function CaloriesRecordEdit(props) {
       field: 'date',
       value: event.target.value,
     });
-    props.setCurrentDate(new Date(event.target.value));
+    setCurrentDate(new Date(event.target.value));
   };
 
   const onMealChangeHandler = (event) => {
@@ -113,9 +106,11 @@ function CaloriesRecordEdit(props) {
       calories: Number(mealRecord.calories),
     };
 
-    props.onFormSubmit(completeRecord);
+    addMealRecord(completeRecord);
 
     dispatch({ type: 'RESET_FORM' });
+
+    props.onCancel();
   };
 
   const isSports =
@@ -135,7 +130,7 @@ function CaloriesRecordEdit(props) {
 
   return (
     <form className={styles.form} onSubmit={onSubmitHandler}>
-      <p className={styles.warning}>You spent {props.totalCalories} calories</p>
+      <p className={styles.warning}>You spent {totalCalories} calories</p>
       <label htmlFor="date">Date:</label>
       <input
         type="date"
