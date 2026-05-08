@@ -77,7 +77,7 @@ function CaloriesRecordEdit(props) {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'calories',
-      value: event.target.value,
+      value: Number(event.target.value),
     });
   };
 
