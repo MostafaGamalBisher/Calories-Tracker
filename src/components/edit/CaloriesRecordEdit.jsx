@@ -4,6 +4,8 @@ import styles from './CaloriesRecordEdit.module.css';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
 
+const MEAL_OPTIONS = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+
 const DEFAULT_STATE = {
   date: '',
   meal: 'Breakfast',
@@ -154,12 +156,8 @@ function CaloriesRecordEdit(props) {
         value={mealRecord.meal || ''}
         onChange={onMealChangeHandler}
         isValid={mealRecord.meal === undefined ? true : isMealValid}
-      >
-        <option value="Breakfast">Breakfast</option>
-        <option value="Lunch">Lunch</option>
-        <option value="Dinner">Dinner</option>
-        <option value="Snack">Snack</option>
-      </FormInput>
+        options={MEAL_OPTIONS}
+      ></FormInput>
       <FormInput
         label="Content"
         type="text"

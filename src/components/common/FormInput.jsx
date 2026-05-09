@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import styles from './FormInput.module.css';
 
 const FormInput = React.forwardRef((props, ref) => {
-  const { label, id, type, value, onChange, isValid, children } = props;
+  const { label, id, type, value, onChange, isValid, options } = props;
 
   const inputElement =
     type === 'select' ? (
@@ -16,7 +16,11 @@ const FormInput = React.forwardRef((props, ref) => {
         className={`${styles['form-input']} ${!isValid ? styles.error : ''}`}
         required
       >
-        {children}
+        {options.map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
       </select>
     ) : (
       <input
