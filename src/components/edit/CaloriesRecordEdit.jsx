@@ -1,6 +1,8 @@
 import { CaloriesContext } from '../../CaloriesContext';
-import { useContext, useEffect, useReducer } from 'react';
+import { useContext, useEffect, useReducer, useRef } from 'react';
 import styles from './CaloriesRecordEdit.module.css';
+import FormInput from '../common/FormInput';
+import Button from '../common/Button';
 
 const DEFAULT_STATE = {
   date: '',
@@ -29,6 +31,8 @@ function CaloriesRecordEdit(props) {
   const { totalCalories, setCurrentDate, addMealRecord, currentDateStr } =
     useContext(CaloriesContext);
 
+  const contentRef = useRef();
+
   const [mealRecord, dispatch] = useReducer(
     formReducer,
     DEFAULT_STATE,
@@ -47,6 +51,10 @@ function CaloriesRecordEdit(props) {
       value: currentDateStr,
     });
   }, [currentDateStr]);
+
+  useEffect(() => {
+    contentRef.current.focus();
+  }, []);
 
   const onDateChangeHandler = (event) => {
     dispatch({
@@ -81,6 +89,21 @@ function CaloriesRecordEdit(props) {
     });
   };
 
+  const isSports =
+    mealRecord.content?.toLowerCase() === 'sport' ||
+    mealRecord.content?.toLowerCase() === 'sports';
+
+  const isDateValid = !!mealRecord.date;
+  const isMealValid = !!mealRecord.meal;
+  const isContentValid = !!mealRecord.content;
+
+  const isCaloriesValid =
+    mealRecord.calories !== '' &&
+    (isSports || Number(mealRecord.calories) >= 0);
+
+  const isFormValid =
+    isDateValid && isMealValid && isContentValid && isCaloriesValid;
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
@@ -108,77 +131,60 @@ function CaloriesRecordEdit(props) {
     props.onCancel();
   };
 
-  const isSports =
-    mealRecord.content?.toLowerCase() === 'sport' ||
-    mealRecord.content?.toLowerCase() === 'sports';
-
-  const isDateValid = !!mealRecord.date;
-  const isMealValid = !!mealRecord.meal;
-  const isContentValid = !!mealRecord.content;
-
-  const isCaloriesValid =
-    mealRecord.calories !== '' &&
-    (isSports || Number(mealRecord.calories) >= 0);
-
-  const isFormValid =
-    isDateValid && isMealValid && isContentValid && isCaloriesValid;
-
   return (
     <form className={styles.form} onSubmit={onSubmitHandler}>
       <p className={styles.warning}>You spent {totalCalories} calories</p>
-      <label htmlFor="date">Date:</label>
-      <input
+      <FormInput
+        label="Date"
         type="date"
         name="date"
         id="date"
         value={mealRecord.date || ''}
         onChange={onDateChangeHandler}
-        className={`${styles['form-input']} ${mealRecord.date !== undefined && !isDateValid ? styles.error : ''}`}
+        isValid={mealRecord.date === undefined ? true : isDateValid}
         required
       />
-      <label>Meal:</label>
-      <select
+      <FormInput
+        label="Meal"
+        type="select"
         required
         value={mealRecord.meal || ''}
         onChange={onMealChangeHandler}
-        className={`${styles['form-input']} ${mealRecord.meal !== undefined && !isMealValid ? styles.error : ''}`}
+        isValid={mealRecord.meal === undefined ? true : isMealValid}
       >
         <option value="Breakfast">Breakfast</option>
         <option value="Lunch">Lunch</option>
         <option value="Dinner">Dinner</option>
         <option value="Snack">Snack</option>
-      </select>
-      <label htmlFor="Content">Content:</label>
-      <input
+      </FormInput>
+      <FormInput
+        label="Content"
         type="text"
         name="Content"
         id="Content"
+        ref={contentRef}
         value={mealRecord.content || ''}
         onChange={onContentChangeHandler}
-        className={`${styles['form-input']} ${mealRecord.content !== undefined && !isContentValid ? styles.error : ''}`}
+        isValid={mealRecord.content === undefined ? true : isContentValid}
         required
       />
-      <label htmlFor="Calories">Calories:</label>
-      <input
+      <FormInput
+        label="Calories"
         type="number"
         name="Calories"
         id="Calories"
         value={mealRecord.calories}
         onChange={onCaloriesChangeHandler}
-        className={`${styles['form-input']} ${mealRecord.calories !== 0 && !isCaloriesValid ? styles.error : ''}`}
+        isValid={mealRecord.calories === 0 ? true : isCaloriesValid}
         required
       />
       <div className={styles.footer}>
-        <button type="submit" disabled={!isFormValid}>
+        <Button variant="primary" type="submit" disabled={!isFormValid}>
           Add Record
-        </button>
-        <button
-          className={styles.secondary}
-          type="button"
-          onClick={props.onCancel}
-        >
+        </Button>
+        <Button variant="secondary" type="button" onClick={props.onCancel}>
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );
