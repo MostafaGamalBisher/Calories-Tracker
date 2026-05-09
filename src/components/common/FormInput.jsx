@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './FormInput.module.css';
 
 const FormInput = React.forwardRef((props, ref) => {
@@ -38,4 +38,4 @@ const FormInput = React.forwardRef((props, ref) => {
     </>
   );
 });
-export default FormInput;
+export default memo(FormInput);

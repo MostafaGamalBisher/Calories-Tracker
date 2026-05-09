@@ -1,5 +1,5 @@
 import { CaloriesContext } from '../../CaloriesContext';
-import { useContext, useEffect, useReducer, useRef } from 'react';
+import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import styles from './CaloriesRecordEdit.module.css';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
@@ -56,38 +56,41 @@ function CaloriesRecordEdit(props) {
     contentRef.current.focus();
   }, []);
 
-  const onDateChangeHandler = (event) => {
-    dispatch({
-      type: 'UPDATE_FIELD',
-      field: 'date',
-      value: event.target.value,
-    });
-    setCurrentDate(new Date(event.target.value));
-  };
+  const onDateChangeHandler = useCallback(
+    (event) => {
+      dispatch({
+        type: 'UPDATE_FIELD',
+        field: 'date',
+        value: event.target.value,
+      });
+      setCurrentDate(new Date(event.target.value));
+    },
+    [setCurrentDate]
+  );
 
-  const onMealChangeHandler = (event) => {
+  const onMealChangeHandler = useCallback((event) => {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'meal',
       value: event.target.value,
     });
-  };
+  }, []);
 
-  const onContentChangeHandler = (event) => {
+  const onContentChangeHandler = useCallback((event) => {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'content',
       value: event.target.value,
     });
-  };
+  }, []);
 
-  const onCaloriesChangeHandler = (event) => {
+  const onCaloriesChangeHandler = useCallback((event) => {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'calories',
       value: Number(event.target.value),
     });
-  };
+  }, []);
 
   const isSports =
     mealRecord.content?.toLowerCase() === 'sport' ||
