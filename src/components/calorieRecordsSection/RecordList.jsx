@@ -20,7 +20,7 @@ function RecordList() {
       <ul className={styles.list}>
         {dailyRecords.map((record) => (
           <li key={record.id} className={styles.listItem}>
-            <Link to={`/track/${record.id}`}>
+            <Link to={`${record.id}`}>
               <CalorieRecord {...record}></CalorieRecord>
             </Link>
           </li>

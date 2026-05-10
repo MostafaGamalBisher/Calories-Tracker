@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styles from './SideNav.module.css';
 
 function SideNav() {
@@ -6,13 +6,13 @@ function SideNav() {
     <nav className={styles.nav}>
       <h1 className={styles.title}>Calories Tracker</h1>
       <NavLink
-        to="/"
+        to=""
         className={({ isActive }) => (isActive ? styles.active : undefined)}
       >
         Home
       </NavLink>
       <NavLink
-        to="/track"
+        to="track"
         className={({ isActive }) => (isActive ? styles.active : undefined)}
       >
         Track

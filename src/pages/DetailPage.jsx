@@ -5,7 +5,9 @@ export function DetailPage() {
   return (
     <>
       <p>This is record with ID {params.recordId}</p>
-      <Link to="..">Back to list page</Link>
+      <Link to=".." relative="path">
+        Back to list page
+      </Link>
     </>
   );
 }
