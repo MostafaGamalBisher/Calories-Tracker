@@ -3,16 +3,13 @@ import { CaloriesContext } from '../../CaloriesContext';
 import CalorieRecord from './CalorieRecord';
 import styles from './RecordList.module.css';
 import { Link } from 'react-router-dom';
+import { TextContent } from '../common/TextContent';
 
 function RecordList() {
   const { dailyRecords, totalCalories } = useContext(CaloriesContext);
 
   if (dailyRecords.length === 0) {
-    return (
-      <div className={styles['empty-state']}>
-        No meals recorded for this date.
-      </div>
-    );
+    return <TextContent value="No records found for this day" />;
   }
 
   return (

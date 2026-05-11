@@ -11,14 +11,3 @@
 .listItem:last-child {
   border-bottom: none;
 }
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  background-color: #f9f9f9;
-  border: 1px dashed var(--theme-color-normal, #ccc);
-  border-radius: var(--theme-border-radius-smooth, 12px);
-  color: #666;
-  margin: 20px 0;
-  font-size: 18px;
-}

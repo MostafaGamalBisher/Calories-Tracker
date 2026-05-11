@@ -3,6 +3,8 @@ import { createContext, useState, useEffect } from 'react';
 export const CaloriesContext = createContext();
 
 export function CaloriesContextProvider(props) {
+  const [isLoading, setIsLoading] = useState(true);
+
   const [currentDate, setCurrentDate] = useState(new Date());
   // Extract the local date pieces safely
   const year = currentDate.getFullYear();
@@ -39,6 +41,8 @@ export function CaloriesContextProvider(props) {
         setRecords(formattedData);
       } catch (error) {
         console.error('Failed to fetch records:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -101,6 +105,7 @@ export function CaloriesContextProvider(props) {
         totalCalories,
         addMealRecord,
         currentDateStr: safeDateStr,
+        isLoading,
       }}
     >
       {props.children}
