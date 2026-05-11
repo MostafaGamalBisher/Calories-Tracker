@@ -11,15 +11,16 @@ const MONTHS = [
   'Jul',
   'Aug',
   'Sep',
-  'oct',
+  'Oct',
   'Nov',
   'Dec',
 ];
 
 function CalorieRecordDate(props) {
-  const month = MONTHS[props.date.getUTCMonth()];
-  const day = props.date.getUTCDate();
-  const year = props.date.getUTCFullYear();
+  // Switched to Local Time methods!
+  const month = MONTHS[props.date.getMonth()];
+  const day = props.date.getDate();
+  const year = props.date.getFullYear();
 
   return (
     <StyledRecordCell>

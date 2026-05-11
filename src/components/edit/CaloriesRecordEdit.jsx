@@ -1,5 +1,12 @@
 import { CaloriesContext } from '../../CaloriesContext';
-import { useCallback, useContext, useEffect, useReducer, useRef } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import styles from './CaloriesRecordEdit.module.css';
 import FormInput from '../common/FormInput';
 import Button from '../common/Button';
@@ -33,6 +40,8 @@ function CaloriesRecordEdit(props) {
   const { totalCalories, setCurrentDate, addMealRecord, currentDateStr } =
     useContext(CaloriesContext);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const contentRef = useRef();
 
   const [mealRecord, dispatch] = useReducer(
@@ -40,7 +49,6 @@ function CaloriesRecordEdit(props) {
     DEFAULT_STATE,
     (initialState) => ({
       ...initialState,
-      // date: currentDate.toISOString().split('T')[0],
       date: currentDateStr,
     })
   );
@@ -49,7 +57,6 @@ function CaloriesRecordEdit(props) {
     dispatch({
       type: 'UPDATE_FIELD',
       field: 'date',
-      // value: currentDate.toISOString().split('T')[0],
       value: currentDateStr,
     });
   }, [currentDateStr]);
@@ -109,7 +116,7 @@ function CaloriesRecordEdit(props) {
   const isFormValid =
     isDateValid && isMealValid && isContentValid && isCaloriesValid;
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     if (
@@ -128,12 +135,19 @@ function CaloriesRecordEdit(props) {
       date: new Date(mealRecord.date),
       calories: Number(mealRecord.calories),
     };
+    setIsSubmitting(true);
+    try {
+      const newlyAddedMeal = await addMealRecord(completeRecord);
+      console.log('The Waiter says: Look what the Chef made!', newlyAddedMeal);
 
-    addMealRecord(completeRecord);
+      dispatch({ type: 'RESET_FORM' });
 
-    dispatch({ type: 'RESET_FORM' });
-
-    props.onCancel();
+      props.onCancel();
+    } catch {
+      alert('Something went wrong saving your meal!');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -180,8 +194,12 @@ function CaloriesRecordEdit(props) {
         required
       />
       <div className={styles.footer}>
-        <Button variant="primary" type="submit" disabled={!isFormValid}>
-          Add Record
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={!isFormValid || isSubmitting}
+        >
+          {isSubmitting ? 'Saving...' : 'Add Record'}
         </Button>
         <Button variant="secondary" type="button" onClick={props.onCancel}>
           Cancel

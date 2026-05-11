@@ -14,21 +14,36 @@ export function CaloriesContextProvider(props) {
   // Combine them into the exact string HTML needs
   const safeDateStr = `${year}-${month}-${day}`;
 
-  const [records, setRecords] = useState(() => {
-    const savedRecordsString = localStorage.getItem('myTrackerData');
-    if (savedRecordsString) {
-      const parsedArray = JSON.parse(savedRecordsString);
-      return parsedArray.map((record) => ({
-        ...record,
-        date: new Date(record.date),
-      }));
-    }
-    return [];
-  });
+  const [records, setRecords] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('myTrackerData', JSON.stringify(records));
-  }, [records]);
+    const fetchRecords = async () => {
+      try {
+        const response = await fetch(
+          'https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records'
+        );
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        const formattedData = data.map((record) => ({
+          ...record,
+          date: new Date(record.date),
+        }));
+
+        console.log('Cloud Data Successfully Downloaded:', formattedData);
+
+        setRecords(formattedData);
+      } catch (error) {
+        console.error('Failed to fetch records:', error);
+      }
+    };
+
+    fetchRecords();
+  }, []);
 
   const dailyRecords = records.filter((record) => {
     return (
@@ -43,8 +58,38 @@ export function CaloriesContextProvider(props) {
     0
   );
 
-  const addMealRecord = (newRecord) => {
-    setRecords((prevRecords) => [newRecord, ...prevRecords]);
+  const addMealRecord = async (newRecord) => {
+    try {
+      const response = await fetch(
+        'https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newRecord),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to save to the cloud!');
+      }
+
+      const savedRecord = await response.json();
+
+      const formattedRecord = {
+        ...savedRecord,
+        date: new Date(savedRecord.date),
+      };
+
+      setRecords((prevRecords) => [formattedRecord, ...prevRecords]);
+
+      return formattedRecord;
+    } catch (error) {
+      console.error('Error adding record:', error);
+
+      throw error;
+    }
   };
 
   return (
