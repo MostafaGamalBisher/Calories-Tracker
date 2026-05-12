@@ -3,7 +3,8 @@ import { createContext, useState, useEffect } from 'react';
 export const CaloriesContext = createContext();
 
 export function CaloriesContextProvider(props) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState('loading');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const [currentDate, setCurrentDate] = useState(new Date());
   // Extract the local date pieces safely
@@ -20,6 +21,9 @@ export function CaloriesContextProvider(props) {
 
   useEffect(() => {
     const fetchRecords = async () => {
+      setStatus('loading');
+      setErrorMsg('');
+
       try {
         const response = await fetch(
           'https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records'
@@ -36,14 +40,18 @@ export function CaloriesContextProvider(props) {
           date: new Date(record.date),
         }));
 
-        console.log('Cloud Data Successfully Downloaded:', formattedData);
-
         setRecords(formattedData);
+
+        setStatus('success');
       } catch (error) {
         console.error('Failed to fetch records:', error);
-      } finally {
-        setIsLoading(false);
+
+        setStatus('error');
+        setErrorMsg(error.message || 'Something went wrong.');
       }
+      //  finally {
+      //   setIsLoading(false);
+      // }
     };
 
     fetchRecords();
@@ -105,7 +113,8 @@ export function CaloriesContextProvider(props) {
         totalCalories,
         addMealRecord,
         currentDateStr: safeDateStr,
-        isLoading,
+        status,
+        errorMsg,
       }}
     >
       {props.children}
