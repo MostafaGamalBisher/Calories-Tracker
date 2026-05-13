@@ -49,9 +49,6 @@ export function CaloriesContextProvider(props) {
         setStatus('error');
         setErrorMsg(error.message || 'Something went wrong.');
       }
-      //  finally {
-      //   setIsLoading(false);
-      // }
     };
 
     fetchRecords();
