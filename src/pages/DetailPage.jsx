@@ -2,38 +2,27 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './DetailPage.module.css';
 import { TextContent } from '../components/common/TextContent';
+import { useLoadData } from '../utils/useLoadData';
 
 export function DetailPage() {
   const { recordId } = useParams();
-
-  const [status, setStatus] = useState('loading');
   const [record, setRecord] = useState(null);
-  const [errorMsg, setErrorMsg] = useState('');
+
+  const { status, errorMsg, sendRequest } = useLoadData();
 
   useEffect(() => {
     const fetchSingleRecord = async () => {
-      setStatus('loading');
       try {
-        const response = await fetch(
+        const data = await sendRequest(
           `https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records/${recordId}`
         );
 
-        if (!response.ok) {
-          throw new Error('Could not find this meal in the database.');
-        }
-
-        const data = await response.json();
-
         setRecord(data);
-        setStatus('success');
-      } catch (error) {
-        setStatus('error');
-        setErrorMsg(error.message);
-      }
+      } catch (error) {}
     };
 
     fetchSingleRecord();
-  }, [recordId]);
+  }, [recordId, sendRequest]);
 
   let content;
 

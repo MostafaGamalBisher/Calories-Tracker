@@ -1,39 +1,26 @@
 import { createContext, useState, useEffect } from 'react';
+import { useLoadData } from './utils/useLoadData';
 
 export const CaloriesContext = createContext();
 
 export function CaloriesContextProvider(props) {
-  const [status, setStatus] = useState('loading');
-  const [errorMsg, setErrorMsg] = useState('');
-
   const [currentDate, setCurrentDate] = useState(new Date());
-  // Extract the local date pieces safely
+
   const year = currentDate.getFullYear();
-  // Months are 0-indexed in JS (January is 0), so we add 1.
-  // padStart(2, '0') ensures "May" becomes "05" instead of just "5"
   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
   const day = String(currentDate.getDate()).padStart(2, '0');
-
-  // Combine them into the exact string HTML needs
   const safeDateStr = `${year}-${month}-${day}`;
 
   const [records, setRecords] = useState([]);
 
+  const { status, errorMsg, sendRequest } = useLoadData();
+
   useEffect(() => {
     const fetchRecords = async () => {
-      setStatus('loading');
-      setErrorMsg('');
-
       try {
-        const response = await fetch(
+        const data = await sendRequest(
           'https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records'
         );
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
 
         const formattedData = data.map((record) => ({
           ...record,
@@ -41,18 +28,11 @@ export function CaloriesContextProvider(props) {
         }));
 
         setRecords(formattedData);
-
-        setStatus('success');
-      } catch (error) {
-        console.error('Failed to fetch records:', error);
-
-        setStatus('error');
-        setErrorMsg(error.message || 'Something went wrong.');
-      }
+      } catch (error) {}
     };
 
     fetchRecords();
-  }, []);
+  }, [sendRequest]);
 
   const dailyRecords = records.filter((record) => {
     return (
