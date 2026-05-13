@@ -18,6 +18,8 @@
   width: 100%;
   max-width: 225px;
   margin: auto;
+  text-align: center;
+  text-decoration: none;
 }
 
 .my-custom-overlay {

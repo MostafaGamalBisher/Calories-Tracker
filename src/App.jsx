@@ -6,6 +6,8 @@ import {
   ErrorPage,
   DetailPage,
 } from './pages';
+import TrackLayout from './pages/TrackLayout';
+import { FormPage } from './pages/FormPage';
 
 const router = createBrowserRouter(
   [
@@ -20,11 +22,14 @@ const router = createBrowserRouter(
         },
         {
           path: 'track',
-          element: <TrackPage />,
-        },
-        {
-          path: 'track/:recordId',
-          element: <DetailPage />,
+          element: <TrackLayout />,
+          children: [
+            { index: true, element: <TrackPage /> },
+
+            { path: 'add', element: <FormPage /> },
+
+            { path: ':recordId', element: <DetailPage /> },
+          ],
         },
       ],
     },
