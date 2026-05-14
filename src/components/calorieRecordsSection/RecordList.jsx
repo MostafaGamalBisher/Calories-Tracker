@@ -5,12 +5,12 @@ import styles from './RecordList.module.css';
 import { Link } from 'react-router-dom';
 
 function RecordList() {
-  const { dailyRecords, totalCalories } = useContext(CaloriesContext);
+  const { records, totalCalories } = useContext(CaloriesContext);
 
   return (
     <>
       <ul className={styles.list}>
-        {dailyRecords.map((record) => (
+        {records.map((record) => (
           <li key={record.id} className={styles.listItem}>
             <Link to={`${record.id}`}>
               <CalorieRecord {...record}></CalorieRecord>

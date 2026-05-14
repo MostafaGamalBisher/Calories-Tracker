@@ -19,7 +19,7 @@ export function CaloriesContextProvider(props) {
     const fetchRecords = async () => {
       try {
         const data = await sendRequest(
-          'https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records'
+          `https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records?date=${safeDateStr}`
         );
 
         const formattedData = data.map((record) => ({
@@ -32,20 +32,9 @@ export function CaloriesContextProvider(props) {
     };
 
     fetchRecords();
-  }, [sendRequest]);
+  }, [sendRequest, safeDateStr]);
 
-  const dailyRecords = records.filter((record) => {
-    return (
-      record.date.getDate() === currentDate.getDate() &&
-      record.date.getMonth() === currentDate.getMonth() &&
-      record.date.getFullYear() === currentDate.getFullYear()
-    );
-  });
-
-  const totalCalories = dailyRecords.reduce(
-    (agg, cur) => agg + cur.calories,
-    0
-  );
+  const totalCalories = records.reduce((agg, cur) => agg + cur.calories, 0);
 
   const addMealRecord = async (newRecord) => {
     try {
@@ -144,7 +133,6 @@ export function CaloriesContextProvider(props) {
       value={{
         currentDate,
         setCurrentDate,
-        dailyRecords,
         totalCalories,
         addMealRecord,
         currentDateStr: safeDateStr,
@@ -152,6 +140,7 @@ export function CaloriesContextProvider(props) {
         errorMsg,
         deleteMealRecord,
         updateMealRecord,
+        records,
       }}
     >
       {props.children}
