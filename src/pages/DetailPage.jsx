@@ -7,6 +7,8 @@ import { CaloriesContext } from '../CaloriesContext';
 import Button from '../components/common/Button';
 import Modal from 'react-modal';
 
+Modal.setAppElement('#root');
+
 export function DetailPage() {
   const { recordId } = useParams();
   const [record, setRecord] = useState(null);
