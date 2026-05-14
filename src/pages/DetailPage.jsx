@@ -1,14 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import styles from './DetailPage.module.css';
 import { TextContent } from '../components/common/TextContent';
 import { useLoadData } from '../utils/useLoadData';
+import { CaloriesContext } from '../CaloriesContext';
+import Button from '../components/common/Button';
+import Modal from 'react-modal';
 
 export function DetailPage() {
   const { recordId } = useParams();
   const [record, setRecord] = useState(null);
 
   const { status, errorMsg, sendRequest } = useLoadData();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const { deleteMealRecord } = useContext(CaloriesContext);
 
   useEffect(() => {
     const fetchSingleRecord = async () => {
@@ -24,6 +32,15 @@ export function DetailPage() {
     fetchSingleRecord();
   }, [recordId, sendRequest]);
 
+  const deleteHandler = async () => {
+    try {
+      await deleteMealRecord(recordId);
+      navigate('..');
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   let content;
 
   switch (status) {
@@ -38,7 +55,7 @@ export function DetailPage() {
         <div className={styles.container}>
           <div className={styles.item}>
             <span>Meal Type:</span>
-            <span>{record.meal}</span>
+            <span className={styles.secondSpan}>{record.meal}</span>
           </div>
           <div className={styles.item}>
             <span>Food Content:</span>
@@ -52,6 +69,16 @@ export function DetailPage() {
             <span>Date Added:</span>
             <span>{new Date(record.date).toLocaleDateString()}</span>
           </div>
+
+          <div className={styles.detailPageFooter}>
+            <Link to={`/track/edit/${recordId}`}>
+              <Button variant="editButton">Edit Meal</Button>
+            </Link>
+
+            <Button variant="danger" onClick={() => setIsModalOpen(true)}>
+              Delete Meal
+            </Button>
+          </div>
         </div>
       );
       break;
@@ -60,16 +87,39 @@ export function DetailPage() {
   }
 
   return (
-    <>
-      <h2 className={styles.title}>Record Details</h2>
+    <main className={styles.detailPageContainer}>
+      <header className={styles.header}>
+        <h2 className={styles.title}>Record Details</h2>
+
+        <Link to=".." relative="path" className={styles.backButton}>
+          ← Back to list page
+        </Link>
+      </header>
 
       {content}
 
-      <div className={styles.backButton}>
-        <Link to=".." relative="path">
-          ← Back to list page
-        </Link>
-      </div>
-    </>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        className={styles.modal}
+        overlayClassName={styles.overlay}
+      >
+        <h3>Delete this record?</h3>
+        <p>
+          Are you sure you want to permanently delete this meal? This action
+          cannot be undone.
+        </p>
+
+        <div className={styles.buttonsContainer}>
+          <Button variant="primary" onClick={deleteHandler}>
+            Yes, Delete
+          </Button>
+
+          <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+    </main>
   );
 }

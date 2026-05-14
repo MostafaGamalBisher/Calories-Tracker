@@ -10,7 +10,8 @@ import {
 import styles from './FormPage.module.css';
 import FormInput from '../components/common/FormInput';
 import Button from '../components/common/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useLoadData } from '../utils/useLoadData';
 
 const MEAL_OPTIONS = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 
@@ -32,16 +33,28 @@ function formReducer(state, action) {
     case 'RESET_FORM':
       return DEFAULT_STATE;
 
+    case 'SET_FORM':
+      return action.payload;
+
     default:
       return state;
   }
 }
 
 export function FormPage() {
-  const { totalCalories, setCurrentDate, addMealRecord, currentDateStr } =
-    useContext(CaloriesContext);
+  const {
+    totalCalories,
+    setCurrentDate,
+    addMealRecord,
+    updateMealRecord,
+    currentDateStr,
+  } = useContext(CaloriesContext);
 
   const navigate = useNavigate();
+
+  const { recordId } = useParams();
+  const isEditMode = Boolean(recordId);
+  const { sendRequest } = useLoadData();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,6 +84,34 @@ export function FormPage() {
   useEffect(() => {
     contentRef.current.focus();
   }, []);
+
+  useEffect(() => {
+    if (isEditMode) {
+      const fetchExistingMeal = async () => {
+        try {
+          const data = await sendRequest(
+            `https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records/${recordId}`
+          );
+
+          const dateObj = new Date(data.date);
+          const formattedDateForInput = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+
+          dispatch({
+            type: 'SET_FORM',
+            payload: {
+              date: formattedDateForInput,
+              meal: data.meal,
+              content: data.content,
+              calories: data.calories,
+            },
+          });
+        } catch (error) {
+          alert('Could not load the meal data.');
+        }
+      };
+      fetchExistingMeal();
+    }
+  }, [isEditMode, recordId, sendRequest]);
 
   const onDateChangeHandler = useCallback(
     (event) => {
@@ -145,9 +186,12 @@ export function FormPage() {
 
     setIsSubmitting(true);
     try {
-      const newlyAddedMeal = await addMealRecord(completeRecord);
-      console.log('The Waiter says: Look what the Chef made!', newlyAddedMeal);
-
+      if (isEditMode) {
+        await updateMealRecord(recordId, completeRecord);
+      } else {
+        completeRecord.id = Date.now();
+        await addMealRecord(completeRecord);
+      }
       dispatch({ type: 'RESET_FORM' });
 
       navigate('..');

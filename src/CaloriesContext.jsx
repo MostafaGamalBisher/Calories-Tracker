@@ -81,6 +81,64 @@ export function CaloriesContextProvider(props) {
     }
   };
 
+  const deleteMealRecord = async (id) => {
+    try {
+      const response = await fetch(
+        `https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records/${id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete the record!');
+      }
+
+      setRecords((prevRecords) =>
+        prevRecords.filter((record) => record.id !== id)
+      );
+    } catch (error) {
+      console.error('Error deleting record:', error);
+      throw error;
+    }
+  };
+
+  const updateMealRecord = async (id, updatedRecord) => {
+    try {
+      const response = await fetch(
+        `https://6a0170cf36fb6ad04de0ee2f.mockapi.io/records/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedRecord),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update the record!');
+      }
+
+      const savedRecord = await response.json();
+      const formattedRecord = {
+        ...savedRecord,
+        date: new Date(savedRecord.date),
+      };
+
+      setRecords((prevRecords) =>
+        prevRecords.map((record) =>
+          record.id === id ? formattedRecord : record
+        )
+      );
+
+      return formattedRecord;
+    } catch (error) {
+      console.error('Error updating record:', error);
+      throw error;
+    }
+  };
+
   return (
     <CaloriesContext.Provider
       value={{
@@ -92,6 +150,8 @@ export function CaloriesContextProvider(props) {
         currentDateStr: safeDateStr,
         status,
         errorMsg,
+        deleteMealRecord,
+        updateMealRecord,
       }}
     >
       {props.children}

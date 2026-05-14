@@ -29,6 +29,7 @@ const router = createBrowserRouter(
             { path: 'add', element: <FormPage /> },
 
             { path: ':recordId', element: <DetailPage /> },
+            { path: 'edit/:recordId', element: <FormPage /> },
           ],
         },
       ],
